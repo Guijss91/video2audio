@@ -1,24 +1,2 @@
-# Core dependencies
-streamlit==1.39.0
+streamlit==1.37.0
 requests==2.32.3
-
-# Audio processing
-pyannote.audio==3.1.1
-torch==2.0.1
-torchaudio==2.0.2
-
-# Audio/Video processing
-ffmpeg-python==0.2.0
-
-# Additional dependencies for pyannote
-speechbrain==0.5.16
-asteroid-filterbanks==0.4.0
-huggingface-hub>=0.16.4
-omegaconf>=2.1
-pytorch-lightning>=2.0.0
-pytorch-metric-learning>=2.0.0
-torchmetrics>=0.11.4
-pyYAML>=6.0
-scipy>=1.8.0
-numpy>=1.22.0
-matplotlib>=3.5.0
