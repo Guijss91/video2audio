@@ -34,8 +34,13 @@ if uploaded_file is not None:
 
             # Enviar para webhook do n8n
             with open(tmp_audio_path, "rb") as f:
-                files = {"file": (os.path.basename(tmp_audio_path), f, "audio/mpeg")}
-                response = requests.post(N8N_WEBHOOK_URL, files=files)
+                files = {
+                    "file": (os.path.basename(tmp_audio_path), f, "audio/mpeg")
+                }
+                data = {
+                    "video_filename": uploaded_file.name  # Nome original do vídeo
+                }
+                response = requests.post(N8N_WEBHOOK_URL, files=files, data=data)
 
             if response.status_code == 200:
                 st.success("Áudio enviado com sucesso !")
