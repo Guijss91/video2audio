@@ -5,8 +5,7 @@ import requests
 import os
 
 # URL do webhook do n8n (ajuste para o seu)
-N8N_WEBHOOK_URL_AUDIO = "https://laboratorio-n8n.nu7ixt.easypanel.host/webhook-test/audio"
-N8N_WEBHOOK_URL_TRANSCRICAO = "https://laboratorio-n8n.nu7ixt.easypanel.host/webhook-test/trancricao"
+N8N_WEBHOOK_URL = "https://laboratorio-n8n.nu7ixt.easypanel.host/webhook-test/audio"
 
 st.set_page_config(page_title="Transcrição AssemblyAI", layout="centered")
 st.title("Extrair Áudio e Transcrever com AssemblyAI (via n8n)")
@@ -38,7 +37,7 @@ if uploaded_file is not None:
             with open(tmp_audio_path, "rb") as f:
                 files = {"file": (os.path.basename(tmp_audio_path), f, "audio/mpeg")}
                 data = {"video_filename": uploaded_file.name}
-                response = requests.post(N8N_WEBHOOK_URL_AUDIO, files=files, data=data)
+                response = requests.post(N8N_WEBHOOK_URL, files=files, data=data)
 
             if response.status_code == 200:
                 result = response.json()
@@ -65,19 +64,17 @@ if uploaded_file is not None:
                                 new_name = st.text_input(f"Nome para {sp}", sp)
                                 speaker_map[sp] = new_name if new_name.strip() else sp
 
-                        # Exibir balões de chat
+                        # Estilo de chat
                         for u in utterances:
                             speaker = speaker_map.get(u.get("speaker", "N/A"), "N/A")
                             text = u.get("text", "")
 
                             if speaker == speakers[0]:
-                                # Balão à esquerda (cinza claro)
+                                # Balão à esquerda
                                 st.markdown(
                                     f"""
                                     <div style="display: flex; justify-content: flex-start; margin: 8px 0;">
-                                        <div style="background-color: #f0f0f0; color: #000; 
-                                                    padding: 10px 15px; border-radius: 15px; 
-                                                    max-width: 70%; text-align: left;">
+                                        <div style="background-color: #f1f0f0; padding: 10px 15px; border-radius: 15px; max-width: 70%; text-align: left;">
                                             <b>{speaker}:</b> {text}
                                         </div>
                                     </div>
@@ -85,39 +82,17 @@ if uploaded_file is not None:
                                     unsafe_allow_html=True
                                 )
                             else:
-                                # Balão à direita (azul claro)
+                                # Balão à direita
                                 st.markdown(
                                     f"""
                                     <div style="display: flex; justify-content: flex-end; margin: 8px 0;">
-                                        <div style="background-color: #cce5ff; color: #000; 
-                                                    padding: 10px 15px; border-radius: 15px; 
-                                                    max-width: 70%; text-align: left;">
+                                        <div style="background-color: #d1e7dd; padding: 10px 15px; border-radius: 15px; max-width: 70%; text-align: left;">
                                             <b>{speaker}:</b> {text}
                                         </div>
                                     </div>
                                     """,
                                     unsafe_allow_html=True
                                 )
-
-                        # Botão para enviar transcrição final ao n8n
-                        if st.button("Enviar transcrição final para o n8n"):
-                            final_transcricao = [
-                                {"speaker": speaker_map.get(u.get("speaker", "N/A"), "N/A"),
-                                 "text": u.get("text", "")}
-                                for u in utterances
-                            ]
-
-                            resp = requests.post(
-                                N8N_WEBHOOK_URL_TRANSCRICAO,
-                                json={"transcricao": final_transcricao}
-                            )
-
-                            if resp.status_code == 200:
-                                st.success("Transcrição enviada com sucesso ao n8n!")
-                            else:
-                                st.error(f"Erro ao enviar transcrição: {resp.status_code}")
-                                st.text(resp.text)
-
                     else:
                         st.warning("Nenhuma transcrição encontrada ainda.")
                 else:
