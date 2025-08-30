@@ -66,7 +66,11 @@ if uploaded_file is not None:
                     files = {
                         "file": (os.path.basename(tmp_audio_path), audio_file, "audio/mpeg")
                     }
-                    response = requests.post(N8N_WEBHOOK_URL, files=files, timeout=300) # Timeout de 5 minutos
+                    # Adiciona o nome do arquivo original na requisição
+                    data = {
+                        "video_filename": uploaded_file.name
+                    }
+                    response = requests.post(N8N_WEBHOOK_URL, files=files, data=data, timeout=300) # Timeout de 5 minutos
 
                 # Processa a resposta do n8n
                 if response.status_code == 200:
