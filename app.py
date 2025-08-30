@@ -4,7 +4,7 @@ import tempfile
 import requests
 import os
 
-# URL do webhook do n8n (ajuste para o seu)
+# URLs do n8n
 N8N_WEBHOOK_URL_AUDIO = "https://laboratorio-n8n.nu7ixt.easypanel.host/webhook-test/audio"
 N8N_WEBHOOK_URL_TRANSCRICAO = "https://laboratorio-n8n.nu7ixt.easypanel.host/webhook-test/trancricao"
 
@@ -23,11 +23,9 @@ if uploaded_file is not None:
             tmp_video.write(uploaded_file.read())
             tmp_video_path = tmp_video.name
 
-        # Caminho do arquivo de saída (áudio extraído)
         tmp_audio_path = tmp_video_path.replace(".mp4", ".mp3")
 
         try:
-            # Extrair áudio com ffmpeg
             subprocess.run([
                 "ffmpeg", "-i", tmp_video_path, "-q:a", "0", "-map", "a", tmp_audio_path, "-y"
             ], check=True)
@@ -44,7 +42,6 @@ if uploaded_file is not None:
                 result = response.json()
                 st.success("Áudio enviado e processado com sucesso!")
 
-                # Mostra JSON bruto (debug)
                 with st.expander("Ver JSON completo"):
                     st.json(result)
 
@@ -58,20 +55,23 @@ if uploaded_file is not None:
                         # Identificar speakers únicos
                         speakers = sorted(list({u.get("speaker", "N/A") for u in utterances}))
 
-                        # Opção de renomear speakers
-                        speaker_map = {}
+                        # Inicializar session_state para os nomes
+                        if 'speaker_map' not in st.session_state:
+                            st.session_state['speaker_map'] = {sp: sp for sp in speakers}
+
+                        # Expander para renomear interlocutores
                         with st.expander("Renomear interlocutores"):
                             for sp in speakers:
-                                new_name = st.text_input(f"Nome para {sp}", sp)
-                                speaker_map[sp] = new_name if new_name.strip() else sp
+                                new_name = st.text_input(f"Nome para {sp}", st.session_state['speaker_map'][sp], key=f"speaker_{sp}")
+                                st.session_state['speaker_map'][sp] = new_name.strip() if new_name.strip() else sp
 
                         # Exibir balões de chat
                         for u in utterances:
-                            speaker = speaker_map.get(u.get("speaker", "N/A"), "N/A")
+                            speaker = st.session_state['speaker_map'].get(u.get("speaker", "N/A"), "N/A")
                             text = u.get("text", "")
 
-                            if speaker == speakers[0]:
-                                # Balão à esquerda (cinza claro)
+                            if speaker == st.session_state['speaker_map'][speakers[0]]:
+                                # Balão à esquerda (cinza)
                                 st.markdown(
                                     f"""
                                     <div style="display: flex; justify-content: flex-start; margin: 8px 0;">
@@ -85,7 +85,7 @@ if uploaded_file is not None:
                                     unsafe_allow_html=True
                                 )
                             else:
-                                # Balão à direita (azul claro)
+                                # Balão à direita (azul)
                                 st.markdown(
                                     f"""
                                     <div style="display: flex; justify-content: flex-end; margin: 8px 0;">
@@ -99,10 +99,10 @@ if uploaded_file is not None:
                                     unsafe_allow_html=True
                                 )
 
-                        # Botão para enviar transcrição final ao n8n
+                        # Botão para enviar transcrição final
                         if st.button("Enviar transcrição final para o n8n"):
                             final_transcricao = [
-                                {"speaker": speaker_map.get(u.get("speaker", "N/A"), "N/A"),
+                                {"speaker": st.session_state['speaker_map'].get(u.get("speaker", "N/A"), "N/A"),
                                  "text": u.get("text", "")}
                                 for u in utterances
                             ]
@@ -117,7 +117,6 @@ if uploaded_file is not None:
                             else:
                                 st.error(f"Erro ao enviar transcrição: {resp.status_code}")
                                 st.text(resp.text)
-
                     else:
                         st.warning("Nenhuma transcrição encontrada ainda.")
                 else:
@@ -131,7 +130,6 @@ if uploaded_file is not None:
             st.error(f"Erro no processamento: {str(e)}")
 
         finally:
-            # Limpeza dos temporários
             if os.path.exists(tmp_video_path):
                 os.remove(tmp_video_path)
             if os.path.exists(tmp_audio_path):
