@@ -9,7 +9,7 @@ N8N_WEBHOOK_URL_AUDIO = "https://laboratorio-n8n.nu7ixt.easypanel.host/webhook-t
 N8N_WEBHOOK_URL_TRANSCRICAO = "https://laboratorio-n8n.nu7ixt.easypanel.host/webhook-test/trancricao"
 
 st.set_page_config(page_title="Transcrição Chat", layout="centered")
-st.title("Extrair Áudio, Transcrever e Exibir Chat")
+st.title("Extrair Áudio e Transcrever com AssemblyAI (via n8n)")
 
 # Upload do vídeo
 uploaded_file = st.file_uploader("Envie um vídeo", type=["mp4", "mkv", "avi", "mov"])
@@ -18,7 +18,7 @@ if uploaded_file is not None:
     st.video(uploaded_file)
 
     if st.button("Extrair Áudio e Enviar"):
-        # Salva o vídeo temporariamente
+        # Salvar vídeo temporariamente
         with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as tmp_video:
             tmp_video.write(uploaded_file.read())
             tmp_video_path = tmp_video.name
@@ -42,35 +42,21 @@ if uploaded_file is not None:
                 result = response.json()
                 st.success("Áudio enviado e processado com sucesso!")
 
-                # Extrair utterances
+                # Exibir transcrição como chat
                 if isinstance(result, list) and len(result) > 0:
                     utterances = result[0].get("utterances", [])
                     if utterances:
-                        # Detectar speakers únicos
-                        speakers = sorted(list({u['speaker'] for u in utterances}))
+                        st.subheader("Transcrição (Chat)")
 
-                        # Inicializar session_state para renomeação
-                        if 'speaker_map' not in st.session_state:
-                            st.session_state['speaker_map'] = {sp: sp for sp in speakers}
-
-                        st.subheader("Renomear interlocutores")
-                        for sp in speakers:
-                            st.session_state['speaker_map'][sp] = st.text_input(
-                                f"Nome para {sp}",
-                                value=st.session_state['speaker_map'][sp],
-                                key=f"speaker_{sp}"
-                            )
-
-                        st.subheader("Chat")
                         # Cores dinâmicas para cada speaker
+                        speakers = sorted(list({u['speaker'] for u in utterances}))
                         colors = ["#f0f0f0", "#cce5ff", "#d1ffd1", "#ffd1d1", "#fff2cc", "#e0ccff", "#ffccf0"]
                         speaker_colors = {sp: colors[i % len(colors)] for i, sp in enumerate(speakers)}
 
                         for u in utterances:
-                            speaker = st.session_state['speaker_map'][u['speaker']]
+                            speaker = u['speaker']
                             text = u['text']
-                            color = speaker_colors[u['speaker']]
-                            justify = "flex-start" if i % 2 == 0 else "flex-end"
+                            color = speaker_colors[speaker]
                             st.markdown(
                                 f"""
                                 <div style="display: flex; justify-content: flex-start; margin: 8px 0;">
@@ -84,11 +70,10 @@ if uploaded_file is not None:
                                 unsafe_allow_html=True
                             )
 
-                        # Botão de envio da transcrição final
+                        # Botão para enviar transcrição final ao n8n
                         if st.button("Enviar transcrição final para n8n"):
                             final_transcricao = [
-                                {"speaker": st.session_state['speaker_map'][u['speaker']], "text": u['text']}
-                                for u in utterances
+                                {"speaker": u['speaker'], "text": u['text']} for u in utterances
                             ]
                             resp = requests.post(
                                 N8N_WEBHOOK_URL_TRANSCRICAO,
