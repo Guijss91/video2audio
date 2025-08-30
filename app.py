@@ -70,29 +70,50 @@ if uploaded_file is not None:
 
                 # Processa a resposta do n8n
                 if response.status_code == 200:
-                    st.success("Transcrição recebida com sucesso!")
                     transcription_data = response.json()
                     
                     # Verifica se a resposta é uma lista e contém dados
                     if transcription_data and isinstance(transcription_data, list):
-                        words = transcription_data[0].get('words', [])
+                        result_data = transcription_data[0]
+                        status = result_data.get('status')
+
+                        if status == 'completed':
+                            st.success("Transcrição concluída com sucesso!")
+                            words = result_data.get('words')
+                            
+                            if words:
+                                # Formata a transcrição com base nos interlocutores
+                                formatted_text = ""
+                                current_speaker = None
+                                for word in words:
+                                    speaker = word.get('speaker')
+                                    if speaker != current_speaker:
+                                        current_speaker = speaker
+                                        if formatted_text:
+                                            formatted_text += "\n\n"
+                                        formatted_text += f"**Interlocutor {speaker}:** "
+                                    formatted_text += word.get('text', '') + " "
+                                st.session_state.transcription_result = formatted_text.strip()
+                            else:
+                                # Se 'words' for nulo ou vazio, usa o campo 'text'
+                                full_text = result_data.get('text')
+                                if full_text:
+                                    st.session_state.transcription_result = full_text
+                                else:
+                                    st.warning("A transcrição foi concluída, mas não retornou um texto.")
+                                    st.session_state.transcription_result = "Nenhum texto encontrado na resposta."
+
+                        elif status in ['processing', 'queued']:
+                            st.warning(f"O processo de transcrição ainda está em andamento (status: {status}). O resultado final será processado pelo n8n.")
+                            st.session_state.transcription_result = f"Status da Transcrição: {status}."
                         
-                        if words:
-                            # Formata a transcrição com base nos interlocutores
-                            formatted_text = ""
-                            current_speaker = None
-                            for word in words:
-                                speaker = word.get('speaker')
-                                if speaker != current_speaker:
-                                    current_speaker = speaker
-                                    if formatted_text:
-                                        formatted_text += "\n\n"
-                                    formatted_text += f"**Interlocutor {speaker}:** "
-                                formatted_text += word.get('text', '') + " "
-                            st.session_state.transcription_result = formatted_text.strip()
+                        elif status == 'error':
+                            st.error("Ocorreu um erro durante o processo de transcrição no serviço de destino.")
+                            st.json(result_data)
+                        
                         else:
-                            # Se não houver 'words', usa o campo 'text' como fallback
-                            st.session_state.transcription_result = transcription_data[0].get('text', "O campo 'words' não foi encontrado na resposta.")
+                            st.warning(f"Status da transcrição desconhecido: '{status}'.")
+                            st.json(result_data)
                     else:
                         st.warning("A resposta do n8n não está no formato esperado (lista JSON).")
                         st.json(transcription_data)
@@ -122,3 +143,4 @@ if st.session_state.transcription_result:
     st.markdown(st.session_state.transcription_result)
     # Use st.text_area se preferir uma caixa de texto simples para copiar e colar
     # st.text_area("Resultado da Transcrição", st.session_state.transcription_result, height=300)
+
