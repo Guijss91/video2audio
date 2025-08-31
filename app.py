@@ -9,7 +9,7 @@ N8N_WEBHOOK_URL_AUDIO = "https://laboratorio-n8n.nu7ixt.easypanel.host/webhook/a
 N8N_WEBHOOK_URL_TRANSCRICAO = "https://laboratorio-n8n.nu7ixt.easypanel.host/webhook/trancricao"
 
 st.set_page_config(page_title="Transcrição Chat", layout="centered")
-st.title("Extrair Áudio e Transcrever com AssemblyAI (via n8n)")
+st.title("Extrair Áudio e Transcrever")
 
 # Upload do vídeo
 uploaded_file = st.file_uploader("Envie um vídeo", type=["mp4", "mkv", "avi", "mov"])
@@ -89,7 +89,7 @@ if st.session_state["utterances"]:
         )
 
     # Botão para enviar transcrição final
-    if st.button("Enviar transcrição final para n8n"):
+    if st.button("Enviar para o SOLAR"):
         final_transcricao = [{"speaker": u['speaker'], "text": u['text']} for u in utterances]
         resp = requests.post(N8N_WEBHOOK_URL_TRANSCRICAO, json={"transcricao": final_transcricao})
         if resp.status_code == 200:
