@@ -683,8 +683,8 @@ if st.session_state["utterances"]:
 st.markdown("""
 <div class="card" style="margin-top: 3rem; text-align: center;">
     <p style="color: var(--text-secondary); margin: 0;">
-        <i class="fas fa-shield-alt"></i> Processamento seguro e confiável | 
-        <i class="fas fa-clock"></i> Powered by FFmpeg + n8n
+        <i class="fas fa-shield-alt"></i> FFmpeg | 
+        <i class="fas fa-clock"></i> Powered LJIT
     </p>
 </div>
 """, unsafe_allow_html=True)
