@@ -5,8 +5,8 @@ import requests
 import os
 
 # URLs do n8n
-N8N_WEBHOOK_URL_AUDIO = "https://laboratorio-n8n.nu7ixt.easypanel.host/webhook-test/audio"
-N8N_WEBHOOK_URL_TRANSCRICAO = "https://laboratorio-n8n.nu7ixt.easypanel.host/webhook-test/trancricao"
+N8N_WEBHOOK_URL_AUDIO = "https://laboratorio-n8n.nu7ixt.easypanel.host/webhook/audio"
+N8N_WEBHOOK_URL_TRANSCRICAO = "https://laboratorio-n8n.nu7ixt.easypanel.host/webhook/trancricao"
 
 st.set_page_config(page_title="Transcrição Chat", layout="centered")
 st.title("Extrair Áudio e Transcrever")
