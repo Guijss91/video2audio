@@ -10,7 +10,7 @@ N8N_WEBHOOK_URL_TRANSCRICAO = "https://laboratorio-n8n.nu7ixt.easypanel.host/web
 
 # Configuração da página com tema personalizado
 st.set_page_config(
-    page_title="Assistente de Transcrição", 
+    page_title="Transcrição Chat", 
     layout="wide",
     initial_sidebar_state="expanded",
     page_icon="🎬"
@@ -25,9 +25,9 @@ st.markdown("""
     
     /* Variáveis CSS */
     :root {
-        --primary-color: #000000;
+        --primary-color: #147235;
         --secondary-color: #764ba2;
-        --background-color: #10722b;
+        --background-color: #147235;
         --card-bg: rgba(255, 255, 255, 0.95);
         --text-primary: #2d3748;
         --text-secondary: #718096;
@@ -123,7 +123,7 @@ st.markdown("""
     
     /* Upload area */
     .upload-area {
-        border: 2px dashed #10722b;
+        border: 2px dashed #667eea;
         border-radius: var(--border-radius);
         padding: 2rem;
         text-align: center;
@@ -388,10 +388,10 @@ st.markdown("""
 st.markdown("""
 <div class="main-header">
     <div class="main-title">
-        <i class="fas fa-video"></i> Assistente de Transcrição
+        <i class="fas fa-video"></i> Transcrição Chat
     </div>
     <div class="main-subtitle">
-        Trasncreva audiencias e envie para o SOLAR de forma fácil e rápida.
+        Extraia áudio de vídeos e gere transcrições inteligentes
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -401,6 +401,7 @@ with st.sidebar:
     st.markdown("""
     <div class="sidebar-content">
         <h3><i class="fas fa-cog"></i> Configurações</h3>
+        <p>Configure as opções de processamento</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -417,7 +418,7 @@ with st.sidebar:
     """, unsafe_allow_html=True)
     
     st.markdown("""
-    <div class="sidebar-content" style="text-align: center;">
+    <div class="sidebar-content">
         <h4><i class="fas fa-chart-line"></i> Status do Sistema</h4>
         <p><i class="fas fa-circle" style="color: #48bb78;"></i> Servidor Online</p>
         <p><i class="fas fa-circle" style="color: #48bb78;"></i> API Disponível</p>
@@ -602,13 +603,13 @@ if st.session_state["utterances"]:
     
     # Cores sólidas para speakers
     colors = [
-        "#4facfe",
+        "#0e258d",
         "#764ba2", 
-        "#0f3c63",
-        "#ff9a9e",
+        "#4facfe",
+        "#43e97b",
         "#fa709a",
         "#a8edea",
-        "#4DA366"
+        "#ff9a9e"
     ]
     speaker_colors = {sp: colors[i % len(colors)] for i, sp in enumerate(speakers)}
     
