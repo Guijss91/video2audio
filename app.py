@@ -417,7 +417,7 @@ with st.sidebar:
     """, unsafe_allow_html=True)
     
     st.markdown("""
-    <div class="sidebar-content">
+    <div class="sidebar-content" style="text-align: center;">
         <h4><i class="fas fa-chart-line"></i> Status do Sistema</h4>
         <p><i class="fas fa-circle" style="color: #48bb78;"></i> Servidor Online</p>
         <p><i class="fas fa-circle" style="color: #48bb78;"></i> API Disponível</p>
@@ -430,10 +430,10 @@ col1, col2 = st.columns([2, 1])
 with col1:
     # Card de upload
     st.markdown("""
-    <div class="sidebar-content" style="text-align: center;">
-        <h4><i class="fas fa-chart-line"></i> Status do Sistema</h4>
-        <p><i class="fas fa-circle" style="color: #48bb78;"></i> Servidor Online</p>
-        <p><i class="fas fa-circle" style="color: #48bb78;"></i> API Disponível</p>
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-cloud-upload-alt"></i> Upload de Vídeo
+        </div>
     </div>
     """, unsafe_allow_html=True)
     
