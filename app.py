@@ -27,7 +27,7 @@ st.markdown("""
     :root {
         --primary-color: #147235;
         --secondary-color: #764ba2;
-        --background-color: #147235;
+        --background-color: #d8dae6;
         --card-bg: rgba(255, 255, 255, 0.95);
         --text-primary: #2d3748;
         --text-secondary: #718096;
