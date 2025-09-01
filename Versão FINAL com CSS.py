@@ -16,10 +16,6 @@ st.set_page_config(
     page_icon="🎬"
 )
 
-# Inicializar session_state para transcrição
-if "utterances" not in st.session_state:
-    st.session_state["utterances"] = []
-
 # CSS personalizado
 st.markdown("""
 <style>
@@ -29,9 +25,9 @@ st.markdown("""
     
     /* Variáveis CSS */
     :root {
-        --primary-color: #147235;
+        --primary-color: #667eea;
         --secondary-color: #764ba2;
-        --background-color: #d8dae6;
+        --background-color: #667eea;
         --card-bg: rgba(255, 255, 255, 0.95);
         --text-primary: #2d3748;
         --text-secondary: #718096;
@@ -45,20 +41,6 @@ st.markdown("""
     .stApp {
         font-family: 'Inter', sans-serif;
         background: var(--background-color);
-    }
-    
-    /* Container principal centralizado com largura limitada */
-    .main .block-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 2rem 3rem;
-    }
-    
-    /* Centralização do conteúdo principal */
-    .main-content-wrapper {
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 0 2rem;
     }
     
     /* Sidebar styling - texto preto */
@@ -90,8 +72,7 @@ st.markdown("""
         backdrop-filter: blur(10px);
         border-radius: var(--border-radius);
         padding: 2rem;
-        margin: 0 auto 2rem auto;
-        max-width: 800px;
+        margin-bottom: 2rem;
         box-shadow: var(--shadow);
         text-align: center;
         border: 1px solid rgba(255, 255, 255, 0.2);
@@ -112,14 +93,13 @@ st.markdown("""
         animation: fadeInUp 0.8s ease 0.2s both;
     }
     
-    /* Cards centralizados */
+    /* Cards */
     .card {
         background: var(--card-bg);
         backdrop-filter: blur(10px);
         border-radius: var(--border-radius);
         padding: 1.5rem;
-        margin: 1rem auto;
-        max-width: 800px;
+        margin: 1rem 0;
         box-shadow: var(--shadow);
         border: 1px solid rgba(255, 255, 255, 0.2);
         transition: all 0.3s ease;
@@ -141,7 +121,7 @@ st.markdown("""
         gap: 0.5rem;
     }
     
-    /* Upload area centralizada */
+    /* Upload area */
     .upload-area {
         border: 2px dashed #667eea;
         border-radius: var(--border-radius);
@@ -149,8 +129,7 @@ st.markdown("""
         text-align: center;
         background: rgba(102, 126, 234, 0.05);
         transition: all 0.3s ease;
-        margin: 1rem auto;
-        max-width: 600px;
+        margin: 1rem 0;
     }
     
     .upload-area:hover {
@@ -197,14 +176,13 @@ st.markdown("""
         100% { width: 100%; }
     }
     
-    /* Chat container centralizado */
+    /* Chat container */
     .chat-container {
         background: var(--card-bg);
         backdrop-filter: blur(10px);
         border-radius: var(--border-radius);
         padding: 1.5rem;
-        margin: 1rem auto;
-        max-width: 800px;
+        margin: 1rem 0;
         box-shadow: var(--shadow);
         border: 1px solid rgba(255, 255, 255, 0.2);
         max-height: 500px;
@@ -245,17 +223,15 @@ st.markdown("""
         font-size: 0.95rem;
     }
     
-    /* Alertas personalizados centralizados */
+    /* Alertas personalizados */
     .custom-success {
         background: #48bb78;
         color: white;
         padding: 1rem;
         border-radius: var(--border-radius);
-        margin: 1rem auto;
-        max-width: 600px;
+        margin: 1rem 0;
         box-shadow: var(--shadow);
         animation: slideInDown 0.5s ease;
-        text-align: center;
     }
     
     .custom-error {
@@ -263,11 +239,9 @@ st.markdown("""
         color: white;
         padding: 1rem;
         border-radius: var(--border-radius);
-        margin: 1rem auto;
-        max-width: 600px;
+        margin: 1rem 0;
         box-shadow: var(--shadow);
         animation: slideInDown 0.5s ease;
-        text-align: center;
     }
     
     .custom-warning {
@@ -275,11 +249,9 @@ st.markdown("""
         color: white;
         padding: 1rem;
         border-radius: var(--border-radius);
-        margin: 1rem auto;
-        max-width: 600px;
+        margin: 1rem 0;
         box-shadow: var(--shadow);
         animation: slideInDown 0.5s ease;
-        text-align: center;
     }
     
     /* Animações */
@@ -336,25 +308,22 @@ st.markdown("""
         to { transform: rotate(360deg); }
     }
     
-    /* Video container centralizado */
+    /* Video container */
     .video-container {
         border-radius: var(--border-radius);
         overflow: hidden;
         box-shadow: var(--shadow);
-        margin: 1rem auto;
-        max-width: 700px;
+        margin: 1rem 0;
         background: var(--card-bg);
         padding: 1rem;
     }
     
-    /* Estatísticas centralizadas */
+    /* Estatísticas */
     .stats-container {
         display: flex;
         gap: 1rem;
-        margin: 1rem auto;
-        max-width: 600px;
+        margin: 1rem 0;
         flex-wrap: wrap;
-        justify-content: center;
     }
     
     .stat-card {
@@ -388,22 +357,10 @@ st.markdown("""
         letter-spacing: 0.5px;
     }
     
-    /* Centralização das colunas */
-    .stColumn {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    /* Centralizar elementos do Streamlit */
-    .stFileUploader {
-        max-width: 600px;
-        margin: 0 auto;
-    }
-    
-    .stVideo {
-        max-width: 700px;
-        margin: 0 auto;
+    /* Remove margens padrão do Streamlit */
+    .main .block-container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
     }
     
     /* Scrollbar personalizada */
@@ -424,60 +381,17 @@ st.markdown("""
     .chat-container::-webkit-scrollbar-thumb:hover {
         background: var(--secondary-color);
     }
-    
-    /* Responsividade */
-    @media (max-width: 768px) {
-        .main .block-container {
-            padding: 1rem 1rem;
-        }
-        
-        .main-content-wrapper {
-            padding: 0 1rem;
-        }
-        
-        .main-header {
-            margin: 0 1rem 2rem 1rem;
-        }
-        
-        .card {
-            margin: 1rem 1rem;
-        }
-        
-        .stats-container {
-            margin: 1rem 1rem;
-        }
-    }
-    
-    /* Container para centralizar conteúdo com flexbox */
-    .flex-center-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        width: 100%;
-    }
-    
-    /* Container para centralizar colunas */
-    .centered-columns {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-        max-width: 900px;
-        margin: 0 auto;
-    }
 </style>
 """, unsafe_allow_html=True)
 
 # Header principal com design melhorado
 st.markdown("""
-<div class="flex-center-container">
-    <div class="main-header">
-        <div class="main-title">
-            <i class="fas fa-video"></i> Transcrição Chat
-        </div>
-        <div class="main-subtitle">
-            Extraia áudio de vídeos e gere transcrições inteligentes
-        </div>
+<div class="main-header">
+    <div class="main-title">
+        <i class="fas fa-video"></i> Transcrição Chat
+    </div>
+    <div class="main-subtitle">
+        Extraia áudio de vídeos e gere transcrições inteligentes
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -511,29 +425,20 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-# Wrapper para centralizar o conteúdo principal
-st.markdown('<div class="main-content-wrapper">', unsafe_allow_html=True)
-
-# Container para centralizar as colunas
-st.markdown('<div class="centered-columns">', unsafe_allow_html=True)
-
 # Layout principal com colunas
 col1, col2 = st.columns([2, 1])
 
 with col1:
-    # Card de upload centralizado
+    # Card de upload
     st.markdown("""
-    <div class="flex-center-container">
-        <div class="card">
-            <div class="card-title">
-                <i class="fas fa-cloud-upload-alt"></i> Upload de Vídeo
-            </div>
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-cloud-upload-alt"></i> Upload de Vídeo
         </div>
     </div>
     """, unsafe_allow_html=True)
     
     # Upload do vídeo com área personalizada
-    st.markdown('<div class="flex-center-container">', unsafe_allow_html=True)
     st.markdown('<div class="upload-area">', unsafe_allow_html=True)
     uploaded_file = st.file_uploader(
         "Arraste e solte seu vídeo aqui ou clique para selecionar", 
@@ -541,22 +446,19 @@ with col1:
         help="Tamanho máximo recomendado: 500MB"
     )
     st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
 
 with col2:
     # Estatísticas do arquivo
     if uploaded_file is not None:
         st.markdown("""
-        <div class="flex-center-container">
-            <div class="stats-container">
-                <div class="stat-card">
-                    <div class="stat-value">{:.1f}</div>
-                    <div class="stat-label">MB</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">{}</div>
-                    <div class="stat-label">Formato</div>
-                </div>
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-value">{:.1f}</div>
+                <div class="stat-label">MB</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{}</div>
+                <div class="stat-label">Formato</div>
             </div>
         </div>
         """.format(
@@ -564,11 +466,12 @@ with col2:
             uploaded_file.name.split('.')[-1].upper()
         ), unsafe_allow_html=True)
 
-st.markdown('</div>', unsafe_allow_html=True)  # Fechar centered-columns
+# Inicializar session_state para transcrição
+if "utterances" not in st.session_state:
+    st.session_state["utterances"] = []
 
 if uploaded_file is not None:
     # Video preview com container personalizado
-    st.markdown('<div class="flex-center-container">', unsafe_allow_html=True)
     st.markdown('<div class="video-container">', unsafe_allow_html=True)
     st.markdown("""
     <div class="card-title">
@@ -577,26 +480,22 @@ if uploaded_file is not None:
     """, unsafe_allow_html=True)
     st.video(uploaded_file)
     st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
 
     # Botão de processamento com design melhorado
-    st.markdown('<div class="flex-center-container">', unsafe_allow_html=True)
     col_btn1, col_btn2, col_btn3 = st.columns([1, 2, 1])
     with col_btn2:
         if st.button("🚀 Extrair Áudio e Enviar", use_container_width=True):
             # Progress bar personalizada
             progress_placeholder = st.empty()
             progress_placeholder.markdown("""
-            <div class="flex-center-container">
-                <div class="card">
-                    <div class="card-title">
-                        <i class="fas fa-cogs"></i> Processando...
-                    </div>
-                    <div class="custom-progress"></div>
-                    <p style="text-align: center; margin-top: 1rem;">
-                        <span class="loading-spinner"></span> Extraindo áudio do vídeo...
-                    </p>
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-cogs"></i> Processando...
                 </div>
+                <div class="custom-progress"></div>
+                <p style="text-align: center; margin-top: 1rem;">
+                    <span class="loading-spinner"></span> Extraindo áudio do vídeo...
+                </p>
             </div>
             """, unsafe_allow_html=True)
             
@@ -609,16 +508,14 @@ if uploaded_file is not None:
             try:
                 # Atualizar progress
                 progress_placeholder.markdown("""
-                <div class="flex-center-container">
-                    <div class="card">
-                        <div class="card-title">
-                            <i class="fas fa-cogs"></i> Processando...
-                        </div>
-                        <div class="custom-progress"></div>
-                        <p style="text-align: center; margin-top: 1rem;">
-                            <span class="loading-spinner"></span> Convertendo para áudio...
-                        </p>
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-cogs"></i> Processando...
                     </div>
+                    <div class="custom-progress"></div>
+                    <p style="text-align: center; margin-top: 1rem;">
+                        <span class="loading-spinner"></span> Convertendo para áudio...
+                    </p>
                 </div>
                 """, unsafe_allow_html=True)
                 
@@ -628,25 +525,21 @@ if uploaded_file is not None:
                 
                 # Sucesso personalizado
                 progress_placeholder.markdown("""
-                <div class="flex-center-container">
-                    <div class="custom-success">
-                        <i class="fas fa-check-circle"></i> Áudio extraído com sucesso!
-                    </div>
+                <div class="custom-success">
+                    <i class="fas fa-check-circle"></i> Áudio extraído com sucesso!
                 </div>
                 """, unsafe_allow_html=True)
 
                 # Atualizar para envio
                 progress_placeholder.markdown("""
-                <div class="flex-center-container">
-                    <div class="card">
-                        <div class="card-title">
-                            <i class="fas fa-cloud-upload-alt"></i> Enviando...
-                        </div>
-                        <div class="custom-progress"></div>
-                        <p style="text-align: center; margin-top: 1rem;">
-                            <span class="loading-spinner"></span> Enviando para processamento...
-                        </p>
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-cloud-upload-alt"></i> Enviando...
                     </div>
+                    <div class="custom-progress"></div>
+                    <p style="text-align: center; margin-top: 1rem;">
+                        <span class="loading-spinner"></span> Enviando para processamento...
+                    </p>
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -658,10 +551,8 @@ if uploaded_file is not None:
                 if response.status_code == 200:
                     result = response.json()
                     progress_placeholder.markdown("""
-                    <div class="flex-center-container">
-                        <div class="custom-success">
-                            <i class="fas fa-check-circle"></i> Áudio enviado e processado com sucesso!
-                        </div>
+                    <div class="custom-success">
+                        <i class="fas fa-check-circle"></i> Áudio enviado e processado com sucesso!
                     </div>
                     """, unsafe_allow_html=True)
 
@@ -671,29 +562,23 @@ if uploaded_file is not None:
                         st.session_state["utterances"] = utterances
                     else:
                         progress_placeholder.markdown("""
-                        <div class="flex-center-container">
-                            <div class="custom-warning">
-                                <i class="fas fa-exclamation-triangle"></i> Nenhuma transcrição encontrada.
-                            </div>
+                        <div class="custom-warning">
+                            <i class="fas fa-exclamation-triangle"></i> Nenhuma transcrição encontrada.
                         </div>
                         """, unsafe_allow_html=True)
 
                 else:
                     progress_placeholder.markdown(f"""
-                    <div class="flex-center-container">
-                        <div class="custom-error">
-                            <i class="fas fa-times-circle"></i> Erro ao enviar áudio: {response.status_code}
-                        </div>
+                    <div class="custom-error">
+                        <i class="fas fa-times-circle"></i> Erro ao enviar áudio: {response.status_code}
                     </div>
                     """, unsafe_allow_html=True)
                     st.text(response.text)
 
             except Exception as e:
                 progress_placeholder.markdown(f"""
-                <div class="flex-center-container">
-                    <div class="custom-error">
-                        <i class="fas fa-times-circle"></i> Erro no processamento: {str(e)}
-                    </div>
+                <div class="custom-error">
+                    <i class="fas fa-times-circle"></i> Erro no processamento: {str(e)}
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -702,16 +587,13 @@ if uploaded_file is not None:
                     os.remove(tmp_video_path)
                 if os.path.exists(tmp_audio_path):
                     os.remove(tmp_audio_path)
-    st.markdown('</div>', unsafe_allow_html=True)
 
 # Exibir chat se houver transcrição
 if st.session_state["utterances"]:
     st.markdown("""
-    <div class="flex-center-container">
-        <div class="card">
-            <div class="card-title">
-                <i class="fas fa-comments"></i> Transcrição (Chat)
-            </div>
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-comments"></i> Transcrição (Chat)
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -721,7 +603,7 @@ if st.session_state["utterances"]:
     
     # Cores sólidas para speakers
     colors = [
-        "#0e258d",
+        "#667eea",
         "#764ba2", 
         "#4facfe",
         "#43e97b",
@@ -733,26 +615,23 @@ if st.session_state["utterances"]:
     
     # Estatísticas da conversa
     st.markdown(f"""
-    <div class="flex-center-container">
-        <div class="stats-container">
-            <div class="stat-card">
-                <div class="stat-value">{len(utterances)}</div>
-                <div class="stat-label">Mensagens</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">{len(speakers)}</div>
-                <div class="stat-label">Participantes</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">{sum(len(u['text'].split()) for u in utterances)}</div>
-                <div class="stat-label">Palavras</div>
-            </div>
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-value">{len(utterances)}</div>
+            <div class="stat-label">Mensagens</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{len(speakers)}</div>
+            <div class="stat-label">Participantes</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{sum(len(u['text'].split()) for u in utterances)}</div>
+            <div class="stat-label">Palavras</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
     
     # Container do chat
-    st.markdown('<div class="flex-center-container">', unsafe_allow_html=True)
     st.markdown('<div class="chat-container">', unsafe_allow_html=True)
     
     for i, u in enumerate(utterances):
@@ -776,25 +655,21 @@ if st.session_state["utterances"]:
         )
     
     st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
 
     # Botão para enviar transcrição final com design melhorado
-    st.markdown('<div class="flex-center-container">', unsafe_allow_html=True)
     col_final1, col_final2, col_final3 = st.columns([1, 2, 1])
     with col_final2:
         if st.button("🚀 Enviar para o SOLAR", use_container_width=True):
             # Loading state
             loading_placeholder = st.empty()
             loading_placeholder.markdown("""
-            <div class="flex-center-container">
-                <div class="card">
-                    <div class="card-title">
-                        <i class="fas fa-paper-plane"></i> Enviando...
-                    </div>
-                    <p style="text-align: center;">
-                        <span class="loading-spinner"></span> Enviando transcrição para o SOLAR...
-                    </p>
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-paper-plane"></i> Enviando...
                 </div>
+                <p style="text-align: center;">
+                    <span class="loading-spinner"></span> Enviando transcrição para o SOLAR...
+                </p>
             </div>
             """, unsafe_allow_html=True)
             
@@ -803,22 +678,14 @@ if st.session_state["utterances"]:
             
             if resp.status_code == 200:
                 loading_placeholder.markdown("""
-                <div class="flex-center-container">
-                    <div class="custom-success">
-                        <i class="fas fa-check-circle"></i> Transcrição enviada com sucesso!
-                    </div>
+                <div class="custom-success">
+                    <i class="fas fa-check-circle"></i> Transcrição enviada com sucesso!
                 </div>
                 """, unsafe_allow_html=True)
             else:
                 loading_placeholder.markdown(f"""
-                <div class="flex-center-container">
-                    <div class="custom-error">
-                        <i class="fas fa-times-circle"></i> Erro ao enviar transcrição: {resp.status_code}
-                    </div>
+                <div class="custom-error">
+                    <i class="fas fa-times-circle"></i> Erro ao enviar transcrição: {resp.status_code}
                 </div>
                 """, unsafe_allow_html=True)
                 st.text(resp.text)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# Fechar wrapper do conteúdo principal
-st.markdown('</div>', unsafe_allow_html=True)
