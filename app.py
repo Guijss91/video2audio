@@ -602,13 +602,13 @@ if st.session_state["utterances"]:
     
     # Cores sólidas para speakers
     colors = [
-        "#10722b",
-        "#764ba2", 
         "#4facfe",
-        "#43e97b",
+        "#764ba2", 
+        "#0f3c63",
+        "#ff9a9e",
         "#fa709a",
         "#a8edea",
-        "#ff9a9e"
+        "#4DA366"
     ]
     speaker_colors = {sp: colors[i % len(colors)] for i, sp in enumerate(speakers)}
     
