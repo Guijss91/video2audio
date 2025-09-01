@@ -10,7 +10,7 @@ N8N_WEBHOOK_URL_TRANSCRICAO = "https://laboratorio-n8n.nu7ixt.easypanel.host/web
 
 # Configuração da página com tema personalizado
 st.set_page_config(
-    page_title="Assistente de Transcrição", 
+    page_title="Transcrição Chat", 
     layout="wide",
     initial_sidebar_state="expanded",
     page_icon="🎬"
@@ -25,9 +25,9 @@ st.markdown("""
     
     /* Variáveis CSS */
     :root {
-        --primary-color: #000000;
+        --primary-color: #667eea;
         --secondary-color: #764ba2;
-        --background-color: #10722b;
+        --background-color: #667eea;
         --card-bg: rgba(255, 255, 255, 0.95);
         --text-primary: #2d3748;
         --text-secondary: #718096;
@@ -123,7 +123,7 @@ st.markdown("""
     
     /* Upload area */
     .upload-area {
-        border: 2px dashed #10722b;
+        border: 2px dashed #667eea;
         border-radius: var(--border-radius);
         padding: 2rem;
         text-align: center;
@@ -388,10 +388,10 @@ st.markdown("""
 st.markdown("""
 <div class="main-header">
     <div class="main-title">
-        <i class="fas fa-video"></i> Assistente de Transcrição
+        <i class="fas fa-video"></i> Transcrição Chat
     </div>
     <div class="main-subtitle">
-        Trasncreva audiencias e envie para o SOLAR de forma fácil e rápida.
+        Extraia áudio de vídeos e gere transcrições inteligentes
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -401,6 +401,7 @@ with st.sidebar:
     st.markdown("""
     <div class="sidebar-content">
         <h3><i class="fas fa-cog"></i> Configurações</h3>
+        <p>Configure as opções de processamento</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -430,10 +431,10 @@ col1, col2 = st.columns([2, 1])
 with col1:
     # Card de upload
     st.markdown("""
-    <div class="sidebar-content" style="text-align: center;">
-        <h4><i class="fas fa-chart-line"></i> Status do Sistema</h4>
-        <p><i class="fas fa-circle" style="color: #48bb78;"></i> Servidor Online</p>
-        <p><i class="fas fa-circle" style="color: #48bb78;"></i> API Disponível</p>
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-cloud-upload-alt"></i> Upload de Vídeo
+        </div>
     </div>
     """, unsafe_allow_html=True)
     
@@ -602,7 +603,7 @@ if st.session_state["utterances"]:
     
     # Cores sólidas para speakers
     colors = [
-        "#10722b",
+        "#667eea",
         "#764ba2", 
         "#4facfe",
         "#43e97b",
