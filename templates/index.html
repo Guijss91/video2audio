@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Transcrição Chat</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <div class="flex-center-container">
+    <div class="main-header">
+      <div class="main-title">
+        <i class="fas fa-video"></i> Transcrição Chat
+      </div>
+      <div class="main-subtitle">
+        Extraia áudio de vídeos e gere transcrições inteligentes
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensagens de feedback -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="custom-{{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <!-- Upload de vídeo -->
+  <div class="flex-center-container">
+    <div class="card">
+      <div class="card-title">
+        <i class="fas fa-cloud-upload-alt"></i> Upload de Vídeo
+      </div>
+      <form method="POST" enctype="multipart/form-data">
+        <div class="upload-area">
+          <input type="file" name="video" accept=".mp4,.mkv,.avi,.mov" required>
+        </div>
+        <button type="submit">🚀 Extrair Áudio e Enviar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Transcrição -->
+  {% if utterances %}
+    <div class="flex-center-container">
+      <div class="card">
+        <div class="card-title">
+          <i class="fas fa-comments"></i> Transcrição (Chat)
+        </div>
+      </div>
+    </div>
+
+    <!-- Estatísticas -->
+    <div class="flex-center-container">
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-value">{{ utterances|length }}</div>
+          <div class="stat-label">Mensagens</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">{{ utterances|map(attribute='speaker')|unique|list|length }}</div>
+          <div class="stat-label">Participantes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">{{ utterances|map(attribute='text')|map('split')|sum(attribute='__len__') }}</div>
+          <div class="stat-label">Palavras</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat -->
+    <div class="flex-center-container">
+      <div class="chat-container">
+        {% for u in utterances %}
+          <div class="chat-message" style="background: #764ba2; color: white;">
+            <div class="speaker-label">
+              <i class="fas fa-user"></i> {{ u.speaker }}
+            </div>
+            <div class="message-text">{{ u.text }}</div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Botão para enviar transcrição -->
+    <div class="flex-center-container">
+      <form method="POST" action="{{ url_for('enviar_transcricao') }}">
+        <button type="submit">🚀 Enviar para o SOLAR</button>
+      </form>
+    </div>
+  {% endif %}
+</body>
+</html>

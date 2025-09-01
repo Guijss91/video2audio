@@ -1,27 +1,20 @@
-# Imagem base leve
 FROM python:3.11-slim
 
-# Instala FFmpeg e dependências do sistema
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ffmpeg \
-  && rm -rf /var/lib/apt/lists/*
+# Instalar ffmpeg e dependências básicas
+RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
 
-# Cria diretório de trabalho
+# Criar diretório da aplicação
 WORKDIR /app
 
-# Copia dependências e instala
+# Copiar dependências e instalar
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copia a aplicação
-COPY app.py .
+# Copiar código
+COPY . .
 
-# Usuário não-root por segurança
-RUN useradd -m appuser
-USER appuser
+# Expor porta
+EXPOSE 5000
 
-# Porta padrão do Streamlit
-EXPOSE 8501
-
-# Comando para rodar o Streamlit em modo headless acessível externamente
-CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+# Comando de inicialização
+CMD ["python", "app.py"]
