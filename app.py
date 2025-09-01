@@ -43,6 +43,20 @@ st.markdown("""
         background: var(--background-color);
     }
     
+    /* Container principal centralizado com largura limitada */
+    .main .block-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 3rem;
+    }
+    
+    /* Centralização do conteúdo principal */
+    .main-content-wrapper {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+    
     /* Sidebar styling - texto preto */
     .css-1d391kg, .css-1d391kg * {
         color: var(--sidebar-text) !important;
@@ -72,7 +86,8 @@ st.markdown("""
         backdrop-filter: blur(10px);
         border-radius: var(--border-radius);
         padding: 2rem;
-        margin-bottom: 2rem;
+        margin: 0 auto 2rem auto;
+        max-width: 800px;
         box-shadow: var(--shadow);
         text-align: center;
         border: 1px solid rgba(255, 255, 255, 0.2);
@@ -93,13 +108,14 @@ st.markdown("""
         animation: fadeInUp 0.8s ease 0.2s both;
     }
     
-    /* Cards */
+    /* Cards centralizados */
     .card {
         background: var(--card-bg);
         backdrop-filter: blur(10px);
         border-radius: var(--border-radius);
         padding: 1.5rem;
-        margin: 1rem 0;
+        margin: 1rem auto;
+        max-width: 800px;
         box-shadow: var(--shadow);
         border: 1px solid rgba(255, 255, 255, 0.2);
         transition: all 0.3s ease;
@@ -121,7 +137,7 @@ st.markdown("""
         gap: 0.5rem;
     }
     
-    /* Upload area */
+    /* Upload area centralizada */
     .upload-area {
         border: 2px dashed #667eea;
         border-radius: var(--border-radius);
@@ -129,7 +145,8 @@ st.markdown("""
         text-align: center;
         background: rgba(102, 126, 234, 0.05);
         transition: all 0.3s ease;
-        margin: 1rem 0;
+        margin: 1rem auto;
+        max-width: 600px;
     }
     
     .upload-area:hover {
@@ -176,13 +193,14 @@ st.markdown("""
         100% { width: 100%; }
     }
     
-    /* Chat container */
+    /* Chat container centralizado */
     .chat-container {
         background: var(--card-bg);
         backdrop-filter: blur(10px);
         border-radius: var(--border-radius);
         padding: 1.5rem;
-        margin: 1rem 0;
+        margin: 1rem auto;
+        max-width: 800px;
         box-shadow: var(--shadow);
         border: 1px solid rgba(255, 255, 255, 0.2);
         max-height: 500px;
@@ -223,15 +241,17 @@ st.markdown("""
         font-size: 0.95rem;
     }
     
-    /* Alertas personalizados */
+    /* Alertas personalizados centralizados */
     .custom-success {
         background: #48bb78;
         color: white;
         padding: 1rem;
         border-radius: var(--border-radius);
-        margin: 1rem 0;
+        margin: 1rem auto;
+        max-width: 600px;
         box-shadow: var(--shadow);
         animation: slideInDown 0.5s ease;
+        text-align: center;
     }
     
     .custom-error {
@@ -239,9 +259,11 @@ st.markdown("""
         color: white;
         padding: 1rem;
         border-radius: var(--border-radius);
-        margin: 1rem 0;
+        margin: 1rem auto;
+        max-width: 600px;
         box-shadow: var(--shadow);
         animation: slideInDown 0.5s ease;
+        text-align: center;
     }
     
     .custom-warning {
@@ -249,9 +271,11 @@ st.markdown("""
         color: white;
         padding: 1rem;
         border-radius: var(--border-radius);
-        margin: 1rem 0;
+        margin: 1rem auto;
+        max-width: 600px;
         box-shadow: var(--shadow);
         animation: slideInDown 0.5s ease;
+        text-align: center;
     }
     
     /* Animações */
@@ -308,22 +332,25 @@ st.markdown("""
         to { transform: rotate(360deg); }
     }
     
-    /* Video container */
+    /* Video container centralizado */
     .video-container {
         border-radius: var(--border-radius);
         overflow: hidden;
         box-shadow: var(--shadow);
-        margin: 1rem 0;
+        margin: 1rem auto;
+        max-width: 700px;
         background: var(--card-bg);
         padding: 1rem;
     }
     
-    /* Estatísticas */
+    /* Estatísticas centralizadas */
     .stats-container {
         display: flex;
         gap: 1rem;
-        margin: 1rem 0;
+        margin: 1rem auto;
+        max-width: 600px;
         flex-wrap: wrap;
+        justify-content: center;
     }
     
     .stat-card {
@@ -357,10 +384,22 @@ st.markdown("""
         letter-spacing: 0.5px;
     }
     
-    /* Remove margens padrão do Streamlit */
-    .main .block-container {
-        padding-top: 2rem;
-        padding-bottom: 2rem;
+    /* Centralização das colunas */
+    .stColumn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    /* Centralizar elementos do Streamlit */
+    .stFileUploader {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .stVideo {
+        max-width: 700px;
+        margin: 0 auto;
     }
     
     /* Scrollbar personalizada */
@@ -380,6 +419,29 @@ st.markdown("""
     
     .chat-container::-webkit-scrollbar-thumb:hover {
         background: var(--secondary-color);
+    }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+        .main .block-container {
+            padding: 1rem 1rem;
+        }
+        
+        .main-content-wrapper {
+            padding: 0 1rem;
+        }
+        
+        .main-header {
+            margin: 0 1rem 2rem 1rem;
+        }
+        
+        .card {
+            margin: 1rem 1rem;
+        }
+        
+        .stats-container {
+            margin: 1rem 1rem;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -424,6 +486,9 @@ with st.sidebar:
         <p><i class="fas fa-circle" style="color: #48bb78;"></i> API Disponível</p>
     </div>
     """, unsafe_allow_html=True)
+
+# Wrapper para centralizar o conteúdo principal
+st.markdown('<div class="main-content-wrapper">', unsafe_allow_html=True)
 
 # Layout principal com colunas
 col1, col2 = st.columns([2, 1])
@@ -689,3 +754,6 @@ if st.session_state["utterances"]:
                 </div>
                 """, unsafe_allow_html=True)
                 st.text(resp.text)
+
+# Fechar wrapper do conteúdo principal
+st.markdown('</div>', unsafe_allow_html=True)
